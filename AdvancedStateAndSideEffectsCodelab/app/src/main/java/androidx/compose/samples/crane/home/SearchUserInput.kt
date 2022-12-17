@@ -107,11 +107,21 @@ fun ToDestinationUserInput(onToDestinationChanged: (String) -> Unit) {
     CraneEditableUserInput(
         state = editableUserInputState,
         caption = "To",
-        vectorImageId = R.drawable.ic_plane
+        vectorImageId = R.drawable.ic_plane,
+        onInputChanged = onToDestinationChanged
     )
 
     val currentOnDestinationChanged by rememberUpdatedState(onToDestinationChanged)
     LaunchedEffect(editableUserInputState) {
+        /*
+        fun <T> snapshotFlow(
+            block: () -> T
+        ): Flow<T> = flow
+
+        public interface Flow<out T> {
+            public suspend fun collect(collector: FlowCollector<T>)
+        }
+        */
         snapshotFlow { editableUserInputState.text }
             .filter { !editableUserInputState.isHint }
             .collect {
@@ -121,10 +131,11 @@ fun ToDestinationUserInput(onToDestinationChanged: (String) -> Unit) {
 }
 
 @Composable
-fun DatesUserInput() {
+fun DatesUserInput(datesSelected: String, onDateSelectionClicked: () -> Unit) {
     CraneUserInput(
-        caption = "Select Dates",
-        text = "",
+        onClick = onDateSelectionClicked,
+        caption = if (datesSelected.isEmpty()) "Select Dates" else null,
+        text = datesSelected,
         vectorImageId = R.drawable.ic_calendar
     )
 }

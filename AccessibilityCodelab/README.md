@@ -3,6 +3,17 @@
 This folder contains the source code for
 the [Accessibility in Jetpack Compose Codelab](https://developer.android.com/codelabs/jetpack-compose-accessibility)
 
+了解提高应用程序可访问性的各种方法。增加触摸目标大小，添加内容描述、创建自定义操作等。
+## Design
+- Step 1: Touch target size
+- Step 2: Click labels
+- Step 3: Custom actions
+- Step 4: Content descriptions
+- Step 5: Headings
+- Step 6: Custom merging
+- Step 7: Switches and Checkboxes
+- Step 8: State descriptions
+
 ## License
 
 ```

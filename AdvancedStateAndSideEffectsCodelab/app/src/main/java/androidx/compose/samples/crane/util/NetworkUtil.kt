@@ -16,12 +16,28 @@
 
 package androidx.compose.samples.crane.util
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import coil.intercept.Interceptor
 import coil.request.ImageResult
-import coil.size.Size
-import okhttp3.HttpUrl
+import com.google.accompanist.coil.LocalImageLoader
 import okhttp3.HttpUrl.Companion.toHttpUrl
+@Composable
+fun ProvideImageLoader(content: @Composable () -> Unit) {
+    val context = LocalContext.current
+    val loader = remember(context) {
+        ImageLoader.Builder(context)
+            .components {
+                add(UnsplashSizingInterceptor)
+            }
+            .build()
+    }
+    CompositionLocalProvider(LocalImageLoader provides loader, content = content)
+}
 
 /**
  * A Coil [Interceptor] which appends query params to Unsplash urls to request sized images.

@@ -27,41 +27,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FlySearchContent(
-    onPeopleChanged: (Int) -> Unit,
-    onToDestinationChanged: (String) -> Unit
-) {
+fun FlySearchContent(datesSelected: String, searchUpdates: FlySearchContentUpdates) {
     CraneSearch {
         PeopleUserInput(
             titleSuffix = ", Economy",
-            onPeopleChanged = onPeopleChanged
+            onPeopleChanged = searchUpdates.onPeopleChanged
         )
         Spacer(Modifier.height(8.dp))
         FromDestination()
         Spacer(Modifier.height(8.dp))
-        ToDestinationUserInput(onToDestinationChanged = onToDestinationChanged)
+        ToDestinationUserInput(onToDestinationChanged = searchUpdates.onToDestinationChanged)
         Spacer(Modifier.height(8.dp))
-        DatesUserInput()
+        DatesUserInput(datesSelected, onDateSelectionClicked = searchUpdates.onDateSelectionClicked)
     }
 }
 
 @Composable
-fun SleepSearchContent(onPeopleChanged: (Int) -> Unit) {
+fun SleepSearchContent(datesSelected: String, sleepUpdates: SleepSearchContentUpdates) {
     CraneSearch {
-        PeopleUserInput(onPeopleChanged = onPeopleChanged)
+        PeopleUserInput(onPeopleChanged = { sleepUpdates.onPeopleChanged })
         Spacer(Modifier.height(8.dp))
-        DatesUserInput()
+        DatesUserInput(datesSelected, onDateSelectionClicked = sleepUpdates.onDateSelectionClicked)
         Spacer(Modifier.height(8.dp))
         SimpleUserInput(caption = "Select Location", vectorImageId = R.drawable.ic_hotel)
     }
 }
 
 @Composable
-fun EatSearchContent(onPeopleChanged: (Int) -> Unit) {
+fun EatSearchContent(datesSelected: String, eatUpdates: EatSearchContentUpdates) {
     CraneSearch {
-        PeopleUserInput(onPeopleChanged = onPeopleChanged)
+        PeopleUserInput(onPeopleChanged = { eatUpdates.onPeopleChanged })
         Spacer(Modifier.height(8.dp))
-        DatesUserInput()
+        DatesUserInput(datesSelected, onDateSelectionClicked = eatUpdates.onDateSelectionClicked)
         Spacer(Modifier.height(8.dp))
         SimpleUserInput(caption = "Select Time", vectorImageId = R.drawable.ic_time)
         Spacer(Modifier.height(8.dp))

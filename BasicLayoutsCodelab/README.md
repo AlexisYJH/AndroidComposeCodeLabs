@@ -3,6 +3,17 @@
 This folder contains the source code for
 the [Basic Layouts in Compose Codelab](https://developer.android.com/codelabs/jetpack-compose-layouts)
 
+## Design
+- Search bar - Modifiers
+- Align your body - Alignment
+- Favorite collection card - Material Surface
+- Align your body row - Arrangements
+- Favorite collections grid - LazyGrid
+- Home section - Slot APIs
+- Home screen - Scrolling
+- Bottom navigation - Material
+- MySoothe App - Scaffold
+
 ## License
 
 ```

@@ -16,6 +16,8 @@
 
 package androidx.compose.samples.crane.home
 
+import androidx.compose.samples.crane.calendar.model.DatesSelectedState
+import androidx.compose.samples.crane.data.DatesRepository
 import androidx.compose.samples.crane.data.DestinationsRepository
 import androidx.compose.samples.crane.data.ExploreModel
 import androidx.compose.samples.crane.di.DefaultDispatcher
@@ -35,11 +37,13 @@ const val MAX_PEOPLE = 4
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val destinationsRepository: DestinationsRepository,
-    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
+    datesRepository: DatesRepository
 ) : ViewModel() {
 
     val hotels: List<ExploreModel> = destinationsRepository.hotels
     val restaurants: List<ExploreModel> = destinationsRepository.restaurants
+    val datesSelected: DatesSelectedState = datesRepository.datesSelected
 
     private val _suggestedDestinations = MutableStateFlow<List<ExploreModel>>(emptyList())
     val suggestedDestinations: StateFlow<List<ExploreModel>>

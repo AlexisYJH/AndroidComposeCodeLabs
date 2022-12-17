@@ -39,6 +39,7 @@ enum class CraneScreen {
 @Composable
 fun CraneHome(
     onExploreItemClicked: OnExploreItemClicked,
+    onDateSelectionClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     /*
@@ -67,7 +68,9 @@ fun CraneHome(
         CraneHomeContent(
             modifier = modifier.padding(padding),
             onExploreItemClicked = onExploreItemClicked,
+            onDateSelectionClicked = onDateSelectionClicked,
             openDrawer = {
+                // TODO Codelab: rememberCoroutineScope step - open the navigation drawer
                 scope.launch {
                     //suspend fun open() = animateTo(DrawerValue.Open, AnimationSpec)
                     scaffoldState.drawerState.open()
@@ -81,10 +84,12 @@ fun CraneHome(
 @Composable
 fun CraneHomeContent(
     onExploreItemClicked: OnExploreItemClicked,
+    onDateSelectionClicked: () -> Unit,
     openDrawer: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MainViewModel = viewModel(),
 ) {
+    // TODO Codelab: collectAsState step - consume stream of data from the ViewModel
     val suggestedDestinations by viewModel.suggestedDestinations.collectAsState()
 
     val onPeopleChanged: (Int) -> Unit = { viewModel.updatePeople(it) }
@@ -107,17 +112,21 @@ fun CraneHomeContent(
             SearchContent(
                 tabSelected,
                 viewModel,
-                onPeopleChanged
+                onPeopleChanged,
+                onDateSelectionClicked,
+                onExploreItemClicked
             )
         },
         frontLayerContent = {
             when (tabSelected) {
                 CraneScreen.Fly -> {
-                    ExploreSection(
-                        title = "Explore Flights by Destination",
-                        exploreList = suggestedDestinations,
-                        onItemClicked = onExploreItemClicked
-                    )
+                    suggestedDestinations?.let { destinations ->
+                        ExploreSection(
+                            title = "Explore Flights by Destination",
+                            exploreList = destinations,
+                            onItemClicked = onExploreItemClicked
+                        )
+                    }
                 }
                 CraneScreen.Sleep -> {
                     ExploreSection(
@@ -162,18 +171,58 @@ private fun HomeTabBar(
 private fun SearchContent(
     tabSelected: CraneScreen,
     viewModel: MainViewModel,
-    onPeopleChanged: (Int) -> Unit
+    onPeopleChanged: (Int) -> Unit,
+    onDateSelectionClicked: () -> Unit,
+    onExploreItemClicked: OnExploreItemClicked
 ) {
+    // Reading datesSelected State from here instead of passing the String from the ViewModel
+    // to cause a recomposition when the dates change.
+    val datesSelected = viewModel.datesSelected.toString()
+
     when (tabSelected) {
         CraneScreen.Fly -> FlySearchContent(
-            onPeopleChanged = onPeopleChanged,
-            onToDestinationChanged = { viewModel.toDestinationChanged(it) }
+            datesSelected,
+            searchUpdates = FlySearchContentUpdates(
+                onPeopleChanged = onPeopleChanged,
+                onToDestinationChanged = { viewModel.toDestinationChanged(it) },
+                onDateSelectionClicked = onDateSelectionClicked,
+                onExploreItemClicked = onExploreItemClicked
+            )
         )
         CraneScreen.Sleep -> SleepSearchContent(
-            onPeopleChanged = onPeopleChanged
+            datesSelected,
+            sleepUpdates = SleepSearchContentUpdates(
+                onPeopleChanged = onPeopleChanged,
+                onDateSelectionClicked = onDateSelectionClicked,
+                onExploreItemClicked = onExploreItemClicked
+            )
         )
         CraneScreen.Eat -> EatSearchContent(
-            onPeopleChanged = onPeopleChanged
+            datesSelected,
+            eatUpdates = EatSearchContentUpdates(
+                onPeopleChanged = onPeopleChanged,
+                onDateSelectionClicked = onDateSelectionClicked,
+                onExploreItemClicked = onExploreItemClicked
+            )
         )
     }
 }
+
+data class FlySearchContentUpdates(
+    val onPeopleChanged: (Int) -> Unit,
+    val onToDestinationChanged: (String) -> Unit,
+    val onDateSelectionClicked: () -> Unit,
+    val onExploreItemClicked: OnExploreItemClicked
+)
+
+data class SleepSearchContentUpdates(
+    val onPeopleChanged: (Int) -> Unit,
+    val onDateSelectionClicked: () -> Unit,
+    val onExploreItemClicked: OnExploreItemClicked
+)
+
+data class EatSearchContentUpdates(
+    val onPeopleChanged: (Int) -> Unit,
+    val onDateSelectionClicked: () -> Unit,
+    val onExploreItemClicked: OnExploreItemClicked
+)

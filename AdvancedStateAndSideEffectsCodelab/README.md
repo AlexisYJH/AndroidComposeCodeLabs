@@ -31,15 +31,24 @@ When restricting the Key to Android apps, use `androidx.compose.samples.crane` a
 
 ## State
 - remember >> CraneHomeContent
-- MutableState >> CraneHomeContent
+- collectAsState MutableState >> CraneHomeContent
 - rememberSaveable >> MapViewContainer
 
 ## SideEffects
 - LaunchedEffect >> MapViewContainer
 - rememberCoroutineScope >> CraneHome
-- rememberUpdatedState >> ToDestinationUserInput
+- rememberUpdatedState >> LandingScreen
 - DisposableEffect >> rememberMapViewWithLifecycle
 - SideEffect
 - produceState >> DetailsScreen
 - derivedStateOf >> ExploreSection
-- snapshotFlow
+- snapshotFlow >> ToDestinationUserInput
+
+## Step
+- Encapsulate this state in a state holder
+- collectAsState step - consume stream of data from the ViewModel
+- LaunchedEffect and rememberUpdatedState step
+- rememberCoroutineScope step - open the navigation drawer
+- DisposableEffect step. Make MapView follow the lifecycle
+- produceState step - Show loading screen while fetching city details
+- derivedStateOf step - Show "Scroll to top" button when the first item of the list is not visible

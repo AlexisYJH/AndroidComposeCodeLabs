@@ -60,7 +60,8 @@ class EditableUserInputState(private val hint: String, initialText: String) {
 fun CraneEditableUserInput(
     state: EditableUserInputState = rememberEditableUserInputState(""),
     caption: String? = null,
-    @DrawableRes vectorImageId: Int? = null
+    @DrawableRes vectorImageId: Int? = null,
+    onInputChanged: (String) -> Unit
 ) {
     CraneBaseUserInput(
         caption = caption,
@@ -70,7 +71,8 @@ fun CraneEditableUserInput(
     ) {
         BasicTextField(
             value = state.text,
-            onValueChange = { state.text = it },
+            onValueChange = { state.text = it
+                if (!state.isHint) onInputChanged(state.text)},
             textStyle = if (state.isHint) {
                 captionTextStyle.copy(color = LocalContentColor.current)
             } else {

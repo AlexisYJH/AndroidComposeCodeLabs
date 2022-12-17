@@ -117,6 +117,7 @@ fun DetailsScreen(
     modifier: Modifier = Modifier,
     viewModel: DetailsViewModel = viewModel()
 ) {
+    // TODO Codelab: produceState step - Show loading screen while fetching city details
     val uiState by produceState(initialValue = DetailsUiState(isLoading = true)) {
         val cityDetailsResult = viewModel.cityDetails
         value = if (cityDetailsResult is Result.Success<ExploreModel>) {
@@ -186,10 +187,14 @@ private fun MapViewContainer(
         LatLng(latitude.toDouble(), longitude.toDouble())
     }
 
-    LaunchedEffect(map) {
-        val googleMap = map.awaitMap()
-        googleMap.addMarker { position(cameraPosition) }
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(cameraPosition))
+    var mapInitialized by remember(map) { mutableStateOf(false) }
+    LaunchedEffect(map, mapInitialized) {
+        if (!mapInitialized) {
+            val googleMap = map.awaitMap()
+            googleMap.addMarker { position(cameraPosition) }
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(cameraPosition))
+            mapInitialized = true
+        }
     }
 
     var zoom by rememberSaveable(map) { mutableStateOf(InitialZoom) }

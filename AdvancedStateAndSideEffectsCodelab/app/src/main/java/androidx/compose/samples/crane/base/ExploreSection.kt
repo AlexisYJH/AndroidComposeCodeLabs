@@ -69,6 +69,7 @@ fun ExploreSection(
                 style = MaterialTheme.typography.caption.copy(color = crane_caption)
             )
             Spacer(Modifier.height(8.dp))
+            // TODO Codelab: derivedStateOf step - Show "Scroll to top" button when the first item of the list is not visible
             Box(Modifier.weight(1f)) {
                 val listState = rememberLazyListState()
                 ExploreList(exploreList, onItemClicked, listState = listState)
